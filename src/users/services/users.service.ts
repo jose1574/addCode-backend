@@ -1,34 +1,38 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { Injectable } from '@nestjs/common';
 import { UpdateUserDto } from '../dto/update-user.dto';
-// import { DeleteResult, Repository } from 'typeorm';
-// import { Users } from './entities/user.entity';
-// import pg from 'pg';
 
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 
-// import { Client } from 'pg';
-
-
 @Injectable()
 export class UsersService {
-
-  constructor( 
+  constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    ) {}
+  ) {}
 
-  create() {}
-
-  findAll(): Promise<User[]>{
-   return this.userRepository.find()
+  convertNumberToString(dato: any) {
+    let datoNumber = parseInt(dato);
+    
+    if (datoNumber < 10) {
+      dato = '0' + dato;
+      return dato;
+    } else {
+      return dato;
+    }
   }
 
+  create() {
+    return '';
+  }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findAll(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+
+  async findOne(id: string): Promise<User> {
+    return this.userRepository.findOne({ where: { code: id } });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -37,5 +41,16 @@ export class UsersService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  async validateUser(id: string, password: string): Promise<Boolean> {
+    id = this.convertNumberToString(id);
+
+    console.log('esto es loo que esta llegando', id, ' y ', password);
+    const user = await this.userRepository.findOne({ where: { code: id } });
+    if (user && password === user.password) {
+      return true;
+    }
+    return false;
   }
 }

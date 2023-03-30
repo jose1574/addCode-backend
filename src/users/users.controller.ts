@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  PipeTransform,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { UsersService } from './services/users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,8 +18,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    // return this.usersService.create(createUserDto);
+  create() {
+    return this.usersService.create();
   }
 
   @Get()
@@ -18,17 +28,30 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.usersService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @Post('login')
+  validateUser(@Body() params: any) {
+    // console.log(typeof params);
+
+    console.log('esto es lo que esta llegando desde el backend ', params);
+    
+
+
+    // console.log('esto es lo que estoy validando: ', params[0].id);
+
+    return this.usersService.validateUser(params.username, params.password);
   }
 }
