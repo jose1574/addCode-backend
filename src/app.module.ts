@@ -5,6 +5,7 @@ import { ConnectionDataModule } from './connection-data/connection-data.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
+import { ProductsCodesModule } from './products-codes/products-codes.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ProductsModule } from './products/products.module';
     }),
     UsersModule,
     ProductsModule,
+    ProductsCodesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

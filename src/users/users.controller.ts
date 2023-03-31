@@ -44,14 +44,8 @@ export class UsersController {
 
   @Post('login')
   validateUser(@Body() params: any) {
-    // console.log(typeof params);
 
     console.log('esto es lo que esta llegando desde el backend ', params);
-    
-
-
-    // console.log('esto es lo que estoy validando: ', params[0].id);
-
     return this.usersService.validateUser(params.username, params.password);
   }
 }
